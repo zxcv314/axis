@@ -5,170 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AXIS — Visual Science & Math Utility</title>
     <style>
-      :root {
-        --bg: #0b1020;
-        --glass: rgba(255, 255, 255, 0.08);
-        --glass-border: rgba(255, 255, 255, 0.2);
-        --text: #eaf0ff;
-        --muted: #afbddb;
-        --accent: #76b6ff;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-        color: var(--text);
-        background: radial-gradient(circle at 20% 20%, #1e2e60 0%, var(--bg) 45%), var(--bg);
-        min-height: 100vh;
-      }
-      .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; }
-      .hero, .panel {
-        background: var(--glass);
-        border: 1px solid var(--glass-border);
-        border-radius: 20px;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-      }
-      .hero { padding: 28px; margin-bottom: 18px; }
-      h1 { margin: 0 0 8px; font-size: 2rem; }
-      p { color: var(--muted); line-height: 1.5; }
-      .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
-      .panel { padding: 20px; }
-      .sim-box { height: 220px; border-radius: 14px; background: rgba(11,16,32,.5); position: relative; overflow: hidden; }
-      canvas { width: 100%; height: 100%; display: block; }
-      .controls { display: grid; gap: 12px; margin-top: 14px; }
-      .ctrl label { display:flex; justify-content:space-between; font-size:.9rem; color:var(--muted); margin-bottom:4px; }
-      input[type="range"] { width: 100%; accent-color: var(--accent); }
-      .cards { display:grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-top: 12px; }
-      .card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 12px; }
-      .card h3 { margin: 0 0 8px; font-size: 1rem; }
-      ul { margin: 0; padding-left: 16px; color: var(--muted); }
-      .stat { font-size: .95rem; color: var(--text); }
-      @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .cards { grid-template-columns: 1fr; } }
+      :root { --bg:#0b1020; --glass:rgba(255,255,255,.08); --line:rgba(255,255,255,.18); --text:#eaf0ff; --muted:#afbddb; --accent:#76b6ff; }
+      *{box-sizing:border-box} body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at 20% 20%,#1e2e60 0%,var(--bg) 45%),var(--bg)}
+      .container{max-width:1160px;margin:0 auto;padding:24px}
+      .glass{background:var(--glass);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px)}
+      .hero,.panel{padding:18px}.hero{margin-bottom:14px} h1,h2,h3{margin:0 0 8px} p{margin:0;color:var(--muted)}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+      .sim-box{height:220px;background:rgba(0,0,0,.22);border-radius:12px;overflow:hidden;margin:10px 0}
+      canvas{display:block;width:100%;height:100%}
+      .ctrl{margin:8px 0} .ctrl label{display:flex;justify-content:space-between;font-size:.9rem;color:var(--muted)} input[type=range],select,input{width:100%}
+      .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.card{border:1px solid var(--line);border-radius:10px;padding:10px;background:rgba(255,255,255,.04)}
+      .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(118,182,255,.2);font-size:.8rem}
+      .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stats{font-size:.92rem;margin-top:8px}
+      .table{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:10px}.el{padding:8px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;text-align:center}
+      .el small{display:block;color:var(--muted)}
+      @media(max-width:980px){.grid,.row,.cards{grid-template-columns:1fr}.table{grid-template-columns:repeat(3,1fr)}}
     </style>
   </head>
   <body>
     <div class="container">
-      <section class="hero">
-        <h1>AXIS</h1>
-        <p>수학·과학 개념을 시뮬레이션, 그래프, 수치로 동시에 보여주는 미니멀 웹 유틸리티 프로토타입.</p>
+      <section class="hero glass">
+        <h1>AXIS Prototype</h1>
+        <p>시뮬레이션 + 그래프 + 숫자 표현을 동시에 제공하는 고교 수학·과학 통합 유틸리티.</p>
       </section>
 
       <section class="grid">
-        <article class="panel">
-          <h2>🍎 Physics — Motion Simulator</h2>
-          <p>발사 속도, 각도, 중력을 바꿔 포물선 운동과 실시간 수치를 확인하세요.</p>
+        <article class="panel glass">
+          <h2>🍎 Motion Simulator</h2>
           <div class="sim-box"><canvas id="sim"></canvas></div>
-          <div class="controls">
-            <div class="ctrl">
-              <label><span>초기속도</span><span id="speedVal"></span></label>
-              <input id="speed" type="range" min="10" max="80" value="45" />
-            </div>
-            <div class="ctrl">
-              <label><span>각도</span><span id="angleVal"></span></label>
-              <input id="angle" type="range" min="10" max="80" value="45" />
-            </div>
-            <div class="ctrl">
-              <label><span>중력</span><span id="gravityVal"></span></label>
-              <input id="gravity" type="range" min="1" max="20" step="0.1" value="9.8" />
-            </div>
-          </div>
-          <p class="stat" id="stats"></p>
+          <div class="ctrl"><label>초기속도 <span id="speedVal"></span></label><input id="speed" type="range" min="10" max="80" value="45"></div>
+          <div class="ctrl"><label>각도 <span id="angleVal"></span></label><input id="angle" type="range" min="10" max="80" value="45"></div>
+          <div class="ctrl"><label>중력 <span id="gravityVal"></span></label><input id="gravity" type="range" min="1" max="20" step="0.1" value="9.8"></div>
+          <div class="stats" id="motionStats"></div>
         </article>
 
-        <article class="panel">
-          <h2>📐 수학/과학 모듈 로드맵</h2>
-          <div class="cards">
-            <div class="card"><h3>Mathematics</h3><ul><li>다중 함수 그래프</li><li>교점/극값 탐지</li><li>단위원 삼각함수</li></ul></div>
-            <div class="card"><h3>Physics</h3><ul><li>운동/에너지 시뮬레이터</li><li>힘 벡터 인터랙션</li><li>파동 렌더링</li></ul></div>
-            <div class="card"><h3>Chemistry</h3><ul><li>주기율표 필터</li><li>3D 분자 뷰어</li><li>반응식 균형</li></ul></div>
-            <div class="card"><h3>Astronomy</h3><ul><li>오러리 모델</li><li>위상/식 시각화</li><li>별자리 뷰어</li></ul></div>
+        <article class="panel glass">
+          <h2>📐 Trigonometry Explorer</h2>
+          <p class="pill">단위원 연동</p>
+          <div class="sim-box"><canvas id="trig"></canvas></div>
+          <div class="ctrl"><label>θ (도) <span id="thetaVal"></span></label><input id="theta" type="range" min="0" max="360" value="45"></div>
+          <div class="stats" id="trigStats"></div>
+        </article>
+
+        <article class="panel glass">
+          <h2>⚡ Scientific Converter</h2>
+          <div class="row">
+            <div>
+              <label>카테고리</label>
+              <select id="convType">
+                <option value="ev-j">eV ↔ J</option>
+                <option value="ly-pc">ly ↔ pc</option>
+                <option value="atm-pa">atm ↔ Pa</option>
+              </select>
+            </div>
+            <div>
+              <label>값</label>
+              <input id="convInput" type="number" value="1" step="any">
+            </div>
           </div>
+          <div class="row" style="margin-top:8px">
+            <button id="toRight">→ 변환</button>
+            <button id="toLeft">← 역변환</button>
+          </div>
+          <div class="stats" id="convResult"></div>
+        </article>
+
+        <article class="panel glass">
+          <h2>🧪 Smart Periodic Table</h2>
+          <label>분류 필터</label>
+          <select id="elementFilter">
+            <option value="all">전체</option>
+            <option value="alkali">알칼리 금속</option>
+            <option value="nonmetal">비금속</option>
+            <option value="halogen">할로젠</option>
+            <option value="noble">비활성 기체</option>
+          </select>
+          <div class="table" id="ptable"></div>
+          <div class="stats" id="elementInfo">원소를 선택하세요.</div>
+        </article>
+
+        <article class="panel glass full">
+          <h2>🧠 Smart Quick Solver</h2>
+          <p>간단 수식 계산(+,-,*,/,괄호) 및 1차 방정식(ax+b=c) 풀이.</p>
+          <div class="row" style="margin-top:8px">
+            <input id="solverInput" placeholder="예: 3*(2+5) 또는 2x+4=10">
+            <button id="solveBtn">계산</button>
+          </div>
+          <div class="stats" id="solverOut"></div>
         </article>
       </section>
     </div>
 
     <script>
-      const canvas = document.getElementById('sim');
-      const ctx = canvas.getContext('2d');
-      const speed = document.getElementById('speed');
-      const angle = document.getElementById('angle');
-      const gravity = document.getElementById('gravity');
-      const speedVal = document.getElementById('speedVal');
-      const angleVal = document.getElementById('angleVal');
-      const gravityVal = document.getElementById('gravityVal');
-      const stats = document.getElementById('stats');
-
-      let t = 0;
-      const scale = 3;
-
-      function resize() {
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.clientWidth * dpr;
-        canvas.height = canvas.clientHeight * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Motion simulator
+      const sim = document.getElementById('sim'), sctx = sim.getContext('2d');
+      const speed = document.getElementById('speed'), angle = document.getElementById('angle'), gravity = document.getElementById('gravity');
+      const speedVal = document.getElementById('speedVal'), angleVal = document.getElementById('angleVal'), gravityVal = document.getElementById('gravityVal');
+      const motionStats = document.getElementById('motionStats');
+      let mt = 0;
+      function resizeCanvas(c, ctx){const dpr=window.devicePixelRatio||1; c.width=c.clientWidth*dpr; c.height=c.clientHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);}      
+      function drawMotion(){
+        const v=+speed.value, a=(+angle.value)*Math.PI/180, g=+gravity.value; speedVal.textContent=v+' m/s'; angleVal.textContent=angle.value+'°'; gravityVal.textContent=g+' m/s²';
+        const vx=v*Math.cos(a), vy=v*Math.sin(a), flight=(2*vy)/g, range=vx*flight, h=(vy*vy)/(2*g), scale=3;
+        sctx.clearRect(0,0,sim.clientWidth,sim.clientHeight); sctx.strokeStyle='rgba(255,255,255,.3)'; sctx.beginPath(); sctx.moveTo(0,sim.clientHeight-20); sctx.lineTo(sim.clientWidth,sim.clientHeight-20); sctx.stroke();
+        sctx.strokeStyle='#76b6ff'; sctx.beginPath(); for(let x=0;x<=range;x+=Math.max(range/80,1)){ const tt=x/vx; const y=vy*tt-.5*g*tt*tt; const px=20+x*scale, py=sim.clientHeight-20-y*scale; x===0?sctx.moveTo(px,py):sctx.lineTo(px,py);} sctx.stroke();
+        mt=(mt+0.03)>flight?0:mt+0.03; const cx=20+vx*mt*scale, cy=sim.clientHeight-20-(vy*mt-.5*g*mt*mt)*scale; sctx.fillStyle='#dbe8ff'; sctx.beginPath(); sctx.arc(cx,cy,6,0,Math.PI*2); sctx.fill();
+        motionStats.textContent=`비행시간 ${flight.toFixed(2)}s · 도달거리 ${range.toFixed(1)}m · 최고높이 ${h.toFixed(1)}m`; requestAnimationFrame(drawMotion);
       }
 
-      function values() {
-        return {
-          v: Number(speed.value),
-          a: (Number(angle.value) * Math.PI) / 180,
-          g: Number(gravity.value),
-        };
+      // Trigonometry explorer
+      const trig = document.getElementById('trig'), tctx = trig.getContext('2d');
+      const theta = document.getElementById('theta'), thetaVal = document.getElementById('thetaVal'), trigStats = document.getElementById('trigStats');
+      function drawTrig(){
+        const deg=+theta.value, rad=deg*Math.PI/180; thetaVal.textContent=deg+'°';
+        const w=trig.clientWidth,h=trig.clientHeight,cx=w*.32,cy=h*.5,r=70;
+        tctx.clearRect(0,0,w,h); tctx.strokeStyle='rgba(255,255,255,.35)'; tctx.beginPath(); tctx.arc(cx,cy,r,0,Math.PI*2); tctx.stroke();
+        tctx.beginPath(); tctx.moveTo(cx-r-15,cy); tctx.lineTo(cx+r+15,cy); tctx.moveTo(cx,cy-r-15); tctx.lineTo(cx,cy+r+15); tctx.stroke();
+        const x=Math.cos(rad), y=Math.sin(rad), px=cx+x*r, py=cy-y*r;
+        tctx.strokeStyle='#76b6ff'; tctx.beginPath(); tctx.moveTo(cx,cy); tctx.lineTo(px,py); tctx.stroke();
+        tctx.fillStyle='#dbe8ff'; tctx.beginPath(); tctx.arc(px,py,5,0,Math.PI*2); tctx.fill();
+        trigStats.textContent=`sinθ=${y.toFixed(4)} · cosθ=${x.toFixed(4)} · tanθ=${(Math.tan(rad)).toFixed(4)}`;
+        requestAnimationFrame(drawTrig);
       }
 
-      function updateLabels() {
-        speedVal.textContent = `${speed.value} m/s`;
-        angleVal.textContent = `${angle.value}°`;
-        gravityVal.textContent = `${gravity.value} m/s²`;
+      // converter
+      const convType=document.getElementById('convType'), convInput=document.getElementById('convInput'), convResult=document.getElementById('convResult');
+      function convert(dir){
+        const v=+convInput.value; let out=0, label='';
+        if(convType.value==='ev-j'){ const k=1.602176634e-19; out=dir==='right'?v*k:v/k; label=dir==='right'?'J':'eV'; }
+        if(convType.value==='ly-pc'){ const k=3.26156; out=dir==='right'?v/k:v*k; label=dir==='right'?'pc':'ly'; }
+        if(convType.value==='atm-pa'){ const k=101325; out=dir==='right'?v*k:v/k; label=dir==='right'?'Pa':'atm'; }
+        convResult.textContent=`결과: ${out.toExponential ? out.toExponential(6) : out} ${label}`;
       }
+      document.getElementById('toRight').onclick=()=>convert('right'); document.getElementById('toLeft').onclick=()=>convert('left');
 
-      function draw() {
-        updateLabels();
-        const { v, a, g } = values();
-        const vx = v * Math.cos(a);
-        const vy = v * Math.sin(a);
-        const flight = (2 * vy) / g;
-        const range = vx * flight;
-        const hmax = (vy * vy) / (2 * g);
+      // periodic table mini
+      const elements=[
+        {s:'H',n:'Hydrogen',z:1,c:'nonmetal'},{s:'He',n:'Helium',z:2,c:'noble'},{s:'Li',n:'Lithium',z:3,c:'alkali'},
+        {s:'C',n:'Carbon',z:6,c:'nonmetal'},{s:'N',n:'Nitrogen',z:7,c:'nonmetal'},{s:'O',n:'Oxygen',z:8,c:'nonmetal'},
+        {s:'F',n:'Fluorine',z:9,c:'halogen'},{s:'Ne',n:'Neon',z:10,c:'noble'},{s:'Na',n:'Sodium',z:11,c:'alkali'}
+      ];
+      const ptable=document.getElementById('ptable'), elementInfo=document.getElementById('elementInfo'), elementFilter=document.getElementById('elementFilter');
+      function drawElements(){
+        const f=elementFilter.value; ptable.innerHTML='';
+        elements.filter(e=>f==='all'||e.c===f).forEach(e=>{const d=document.createElement('div'); d.className='el'; d.innerHTML=`<strong>${e.s}</strong><small>${e.z}</small>`; d.onclick=()=>elementInfo.textContent=`${e.n} (${e.s}) · 원자번호 ${e.z} · 분류 ${e.c}`; ptable.appendChild(d);});
+      }
+      elementFilter.onchange=drawElements; drawElements();
 
-        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-        ctx.strokeStyle = 'rgba(255,255,255,.3)';
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.clientHeight - 20);
-        ctx.lineTo(canvas.clientWidth, canvas.clientHeight - 20);
-        ctx.stroke();
-
-        ctx.strokeStyle = '#76b6ff';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (let x = 0; x <= range; x += range / 80 || 1) {
-          const time = x / vx;
-          const y = vy * time - 0.5 * g * time * time;
-          const px = 20 + x * scale;
-          const py = canvas.clientHeight - 20 - y * scale;
-          if (x === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      // solver
+      const solverInput=document.getElementById('solverInput'), solveBtn=document.getElementById('solveBtn'), solverOut=document.getElementById('solverOut');
+      function solve(){
+        const q=solverInput.value.replace(/\s+/g,'');
+        if(!q){solverOut.textContent='입력값이 없습니다.'; return;}
+        if(/=/.test(q) && /x/.test(q)){
+          const [l,r]=q.split('=');
+          const m=l.match(/^([+-]?\d*\.?\d*)x([+-]\d+\.?\d*)?$/);
+          if(!m){solverOut.textContent='형식: ax+b=c (예: 2x+4=10)'; return;}
+          const a = m[1]===''||m[1]==='+'?1:m[1]==='-'?-1:Number(m[1]);
+          const b = m[2]?Number(m[2]):0; const c=Number(r); const x=(c-b)/a;
+          solverOut.textContent=`해: x = ${x}`; return;
         }
-        ctx.stroke();
-
-        t += 0.03;
-        if (t > flight) t = 0;
-        const cx = 20 + vx * t * scale;
-        const cy = canvas.clientHeight - 20 - (vy * t - 0.5 * g * t * t) * scale;
-
-        ctx.fillStyle = '#cce1ff';
-        ctx.beginPath();
-        ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-        ctx.fill();
-
-        stats.textContent = `비행시간 ${flight.toFixed(2)} s · 수평도달거리 ${range.toFixed(1)} m · 최고높이 ${hmax.toFixed(1)} m`;
-        requestAnimationFrame(draw);
+        if(!/^[0-9+\-*/().]+$/.test(q)){solverOut.textContent='허용되지 않은 식입니다.'; return;}
+        try{ const res=Function(`"use strict";return (${q})`)(); solverOut.textContent=`결과: ${res}`; }catch{ solverOut.textContent='계산할 수 없는 식입니다.'; }
       }
+      solveBtn.onclick=solve;
 
-      [speed, angle, gravity].forEach((el) => el.addEventListener('input', () => { t = 0; }));
-      window.addEventListener('resize', resize);
-      resize();
-      draw();
+      [sim,trig].forEach((c,i)=>resizeCanvas(c,i?tctx:sctx));
+      window.addEventListener('resize',()=>{resizeCanvas(sim,sctx);resizeCanvas(trig,tctx);});
+      drawMotion(); drawTrig();
     </script>
   </body>
 </html>
