@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AXIS — Unified Science & Math Lab</title>
+<style>
+:root{--bg:#f5f7fb;--card:#ffffffcc;--line:#dbe3ef;--text:#121722;--muted:#5a6475;--accent:#0071e3}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:radial-gradient(circle at 10% -10%,#fff,#eef3fb 50%,#e7edf8);color:var(--text)}
+.container{max-width:1240px;margin:auto;padding:28px 20px 60px}.hero{padding:28px;border-radius:24px;background:linear-gradient(135deg,#fff,#f4f8ff);border:1px solid var(--line);box-shadow:0 15px 40px #8aa0c620}
+h1{font-size:2.2rem;margin:0 0 8px}h2{font-size:1.2rem;margin:0 0 10px}p{margin:0;color:var(--muted);line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.full{grid-column:1/-1}
+.card{background:var(--card);border:1px solid var(--line);backdrop-filter:blur(12px);border-radius:18px;padding:16px;box-shadow:0 8px 24px #7287a612}
+canvas{width:100%;height:220px;border-radius:12px;background:#fff;border:1px solid var(--line)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ctrl{margin:8px 0}.ctrl label{display:flex;justify-content:space-between;font-size:.87rem;color:var(--muted)}
+input,select,button{width:100%;padding:10px;border-radius:10px;border:1px solid #cfd9e8;background:#fff}button{background:#111827;color:#fff;border:none;cursor:pointer}button.alt{background:#f1f5fb;color:#111827;border:1px solid #d0dae8}
+.stat{margin-top:8px;font-size:.92rem;color:#273142}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{padding:5px 9px;border-radius:999px;background:#edf4ff;color:#2158a5;font-size:.8rem}
+.table{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:8px}.el{padding:8px;border-radius:8px;border:1px solid var(--line);text-align:center;background:#fff;cursor:pointer}
+@media(max-width:980px){.grid,.row{grid-template-columns:1fr}.table{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="container">
+  <section class="hero">
+    <h1>AXIS</h1>
+    <p>Apple 스타일의 미니멀 인터랙티브 과학·수학 실험실 프로토타입. 시뮬레이션 + 그래프 + 수치 표현을 통합 제공합니다.</p>
+    <div class="chips" style="margin-top:10px"><span class="chip">Mathematics</span><span class="chip">Physics</span><span class="chip">Chemistry</span><span class="chip">Astronomy</span><span class="chip">Daily Essentials</span></div>
+  </section>
+
+  <section class="grid">
+    <article class="card"><h2>📈 Interactive Graphing</h2><canvas id="graph"></canvas><div class="ctrl"><label>a <span id="aV"></span></label><input id="a" type="range" min="-4" max="4" step="0.1" value="1"></div><div class="ctrl"><label>b <span id="bV"></span></label><input id="b" type="range" min="-10" max="10" step="0.1" value="0"></div><div class="ctrl"><label>c <span id="cV"></span></label><input id="c" type="range" min="-10" max="10" step="0.1" value="0"></div><div class="stat" id="graphStat"></div></article>
+    <article class="card"><h2>📐 Trigonometry Explorer</h2><canvas id="trig"></canvas><div class="ctrl"><label>θ <span id="thV"></span></label><input id="theta" type="range" min="0" max="360" value="45"></div><div class="stat" id="trigStat"></div></article>
+
+    <article class="card"><h2>🍎 Motion Simulator</h2><canvas id="motion"></canvas><div class="row"><div class="ctrl"><label>속도 <span id="sV"></span></label><input id="speed" type="range" min="10" max="80" value="45"></div><div class="ctrl"><label>각도 <span id="angV"></span></label><input id="angle" type="range" min="10" max="80" value="45"></div></div><div class="ctrl"><label>중력 <span id="gV"></span></label><input id="gravity" type="range" min="1" max="20" step="0.1" value="9.8"></div><div class="stat" id="motionStat"></div></article>
+    <article class="card"><h2>⚡ Energy Playground</h2><canvas id="energy"></canvas><div class="ctrl"><label>높이(m) <span id="hV"></span></label><input id="height" type="range" min="0" max="20" step="0.1" value="10"></div><div class="ctrl"><label>질량(kg) <span id="mV"></span></label><input id="mass" type="range" min="1" max="20" value="5"></div><div class="ctrl"><label>마찰 <span id="fV"></span></label><input id="fric" type="range" min="0" max="1" step="0.05" value="0.1"></div><div class="stat" id="energyStat"></div></article>
+
+    <article class="card"><h2>🧮 Force / Newton</h2><div class="row"><div><label>힘(N)</label><input id="force" type="number" value="20"></div><div><label>질량(kg)</label><input id="massN" type="number" value="4"></div></div><button id="calcA">가속도 계산</button><div class="stat" id="newtonOut"></div><h2 style="margin-top:12px">🔌 Circuit</h2><div class="row"><div><label>전압(V)</label><input id="volt" type="number" value="9"></div><div><label>저항(Ω)</label><input id="res" type="number" value="3"></div></div><button id="calcI" class="alt">전류 계산</button><div class="stat" id="circuitOut"></div></article>
+    <article class="card"><h2>〰️ Wave</h2><canvas id="wave"></canvas><div class="row"><div class="ctrl"><label>진폭 <span id="ampV"></span></label><input id="amp" type="range" min="10" max="80" value="35"></div><div class="ctrl"><label>주파수 <span id="fqV"></span></label><input id="freq" type="range" min="1" max="12" value="4"></div></div><div class="stat">진폭/주파수 변화에 따른 진행파 렌더링</div></article>
+
+    <article class="card"><h2>🧪 Smart Periodic Table</h2><select id="ef"><option value="all">전체</option><option value="alkali">알칼리 금속</option><option value="nonmetal">비금속</option><option value="halogen">할로젠</option><option value="noble">비활성기체</option></select><div class="table" id="ptable"></div><div class="stat" id="elInfo">원소를 선택하세요.</div><h2 style="margin-top:12px">⚗️ Reaction Balance</h2><input id="reaction" placeholder="예: H2 + O2 -> H2O"><button id="balanceBtn" class="alt">예시 균형식 보기</button><div class="stat" id="reactionOut"></div></article>
+    <article class="card"><h2>🧬 3D Molecule Viewer (간이)</h2><canvas id="molecule"></canvas><select id="mol"><option>H2O</option><option>CH4</option></select><div class="stat">마우스 드래그로 회전 (2D 투영)</div></article>
+
+    <article class="card"><h2>🔭 Solar System Orrery</h2><canvas id="orrery"></canvas><div class="ctrl"><label>시간 가속 <span id="tv"></span></label><input id="timeScale" type="range" min="1" max="50" value="8"></div><div class="stat">지구/화성 공전 간이 모델</div></article>
+    <article class="card"><h2>🌗 Phase & Eclipse</h2><canvas id="phase"></canvas><div class="ctrl"><label>달 위상 <span id="pv"></span></label><input id="phaseSlider" type="range" min="0" max="100" value="20"></div><div class="stat" id="phaseOut"></div></article>
+
+    <article class="card full"><h2>🧠 Smart Quick Solver + Scientific Converter</h2><div class="row"><input id="solver" placeholder="예: 2x+4=10 또는 3*(2+5)"><button id="solve">계산</button></div><div class="stat" id="solveOut"></div><div class="row" style="margin-top:10px"><select id="ct"><option value="ev-j">eV ↔ J</option><option value="ly-pc">ly ↔ pc</option><option value="atm-pa">atm ↔ Pa</option></select><input id="cv" type="number" value="1"></div><div class="row" style="margin-top:8px"><button id="c1" class="alt">→ 변환</button><button id="c2" class="alt">← 역변환</button></div><div class="stat" id="convOut"></div></article>
+  </section>
+</div>
+<script>
+const $=s=>document.querySelector(s);const dpr=()=>window.devicePixelRatio||1;function fit(c,ctx){c.width=c.clientWidth*dpr();c.height=c.clientHeight*dpr();ctx.setTransform(dpr(),0,0,dpr(),0,0)}
+function drawAxes(ctx,w,h){ctx.strokeStyle='#d4deeb';ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.moveTo(w/2,0);ctx.lineTo(w/2,h);ctx.stroke()}
+
+const g=$('#graph'),gctx=g.getContext('2d');['#a','#b','#c'].forEach(id=>$(id).oninput=()=>0);
+function graph(){fit(g,gctx);const a=+$('#a').value,b=+$('#b').value,c=+$('#c').value;$('#aV').textContent=a;$('#bV').textContent=b;$('#cV').textContent=c;drawAxes(gctx,g.clientWidth,g.clientHeight);gctx.strokeStyle='#0071e3';gctx.beginPath();for(let px=0;px<g.clientWidth;px++){const x=(px-g.clientWidth/2)/30;const y=a*x*x+b*x+c;const py=g.clientHeight/2-y*30;px?gctx.lineTo(px,py):gctx.moveTo(px,py)}gctx.stroke();const xv=-b/(2*a||1e-6),yv=a*xv*xv+b*xv+c;$('#graphStat').textContent=`꼭짓점 ≈ (${xv.toFixed(2)}, ${yv.toFixed(2)})`;requestAnimationFrame(graph)}
+
+const t=$('#trig'),tctx=t.getContext('2d');function trig(){fit(t,tctx);const deg=+$('#theta').value,rad=deg*Math.PI/180;$('#thV').textContent=deg+'°';const w=t.clientWidth,h=t.clientHeight,cx=w*.35,cy=h*.5,r=70;drawAxes(tctx,w,h);tctx.beginPath();tctx.arc(cx,cy,r,0,Math.PI*2);tctx.strokeStyle='#a9b9ce';tctx.stroke();const x=Math.cos(rad),y=Math.sin(rad),px=cx+x*r,py=cy-y*r;tctx.strokeStyle='#0071e3';tctx.beginPath();tctx.moveTo(cx,cy);tctx.lineTo(px,py);tctx.stroke();tctx.fillStyle='#0071e3';tctx.beginPath();tctx.arc(px,py,5,0,Math.PI*2);tctx.fill();$('#trigStat').textContent=`sin=${y.toFixed(4)} cos=${x.toFixed(4)} tan=${Math.tan(rad).toFixed(4)}`;requestAnimationFrame(trig)}
+
+const m=$('#motion'),mctx=m.getContext('2d');let mt=0;function motion(){fit(m,mctx);const v=+$('#speed').value,a=+$('#angle').value*Math.PI/180,g=+$('#gravity').value;$('#sV').textContent=v+'m/s';$('#angV').textContent=$('#angle').value+'°';$('#gV').textContent=g.toFixed(1);const vx=v*Math.cos(a),vy=v*Math.sin(a),ft=2*vy/g,rg=vx*ft,h=vy*vy/(2*g),sc=3;mctx.strokeStyle='#cdd8e8';mctx.beginPath();mctx.moveTo(0,m.clientHeight-20);mctx.lineTo(m.clientWidth,m.clientHeight-20);mctx.stroke();mctx.strokeStyle='#0071e3';mctx.beginPath();for(let x=0;x<=rg;x+=Math.max(rg/80,1)){const tt=x/vx,y=vy*tt-.5*g*tt*tt,px=18+x*sc,py=m.clientHeight-20-y*sc;x?mctx.lineTo(px,py):mctx.moveTo(px,py)}mctx.stroke();mt=(mt+.03)>ft?0:mt+.03;const cx=18+vx*mt*sc,cy=m.clientHeight-20-(vy*mt-.5*g*mt*mt)*sc;mctx.fillStyle='#111';mctx.beginPath();mctx.arc(cx,cy,5,0,6.3);mctx.fill();$('#motionStat').textContent=`t=${ft.toFixed(2)}s, range=${rg.toFixed(1)}m, hmax=${h.toFixed(1)}m`;requestAnimationFrame(motion)}
+
+const e=$('#energy'),ectx=e.getContext('2d');function energy(){fit(e,ectx);const h=+$('#height').value,m=+$('#mass').value,f=+$('#fric').value;$('#hV').textContent=h;$('#mV').textContent=m;$('#fV').textContent=f;const pe=m*9.8*h,ke=Math.max(0,pe*(1-f));ectx.fillStyle='#dfe8f5';ectx.fillRect(50,30,80,160);ectx.fillRect(170,30,80,160);ectx.fillStyle='#0071e3';ectx.fillRect(50,190-Math.min(150,pe/80),80,Math.min(150,pe/80));ectx.fillStyle='#34a853';ectx.fillRect(170,190-Math.min(150,ke/80),80,Math.min(150,ke/80));$('#energyStat').textContent=`PE=${pe.toFixed(1)}J, KE≈${ke.toFixed(1)}J`;requestAnimationFrame(energy)}
+
+$('#calcA').onclick=()=>$('#newtonOut').textContent=`a = F/m = ${(+$('#force').value/Math.max(+$('#massN').value,1e-6)).toFixed(3)} m/s²`;
+$('#calcI').onclick=()=>$('#circuitOut').textContent=`I = V/R = ${(+$('#volt').value/Math.max(+$('#res').value,1e-6)).toFixed(3)} A`;
+
+const wv=$('#wave'),wctx=wv.getContext('2d');let wt=0;function wave(){fit(wv,wctx);const amp=+$('#amp').value,fq=+$('#freq').value;$('#ampV').textContent=amp;$('#fqV').textContent=fq;wctx.strokeStyle='#0071e3';wctx.beginPath();for(let x=0;x<wv.clientWidth;x++){const y=wv.clientHeight/2+Math.sin((x/wv.clientWidth)*fq*6.28+wt)*amp;x?wctx.lineTo(x,y):wctx.moveTo(x,y)}wctx.stroke();wt+=0.06;requestAnimationFrame(wave)}
+
+const elements=[{s:'H',n:'Hydrogen',z:1,c:'nonmetal'},{s:'He',n:'Helium',z:2,c:'noble'},{s:'Li',n:'Lithium',z:3,c:'alkali'},{s:'C',n:'Carbon',z:6,c:'nonmetal'},{s:'N',n:'Nitrogen',z:7,c:'nonmetal'},{s:'O',n:'Oxygen',z:8,c:'nonmetal'},{s:'F',n:'Fluorine',z:9,c:'halogen'},{s:'Ne',n:'Neon',z:10,c:'noble'},{s:'Na',n:'Sodium',z:11,c:'alkali'}];
+function renderElements(){const f=$('#ef').value,p=$('#ptable');p.innerHTML='';elements.filter(e=>f==='all'||e.c===f).forEach(e=>{const d=document.createElement('div');d.className='el';d.innerHTML=`<b>${e.s}</b><div>${e.z}</div>`;d.onclick=()=>$('#elInfo').textContent=`${e.n}(${e.s}) 원자번호 ${e.z}, ${e.c}`;p.appendChild(d);})}$('#ef').onchange=renderElements;renderElements();
+$('#balanceBtn').onclick=()=>{const raw=$('#reaction').value.replace(/\s+/g,'');const map={'H2+O2->H2O':'2H2 + O2 -> 2H2O','CH4+O2->CO2+H2O':'CH4 + 2O2 -> CO2 + 2H2O'};$('#reactionOut').textContent=map[raw]||'예시 지원: H2+O2->H2O, CH4+O2->CO2+H2O'};
+
+const mol=$('#molecule'),moctx=mol.getContext('2d');let ang=0,drag=false,px=0;mol.onmousedown=e=>{drag=true;px=e.clientX};window.onmouseup=()=>drag=false;window.onmousemove=e=>{if(drag){ang+=(e.clientX-px)*0.01;px=e.clientX}};
+function molecule(){fit(mol,moctx);const type=$('#mol').value,cx=mol.clientWidth/2,cy=mol.clientHeight/2;moctx.fillStyle='#111';moctx.beginPath();moctx.arc(cx,cy,10,0,6.3);moctx.fill();const bonds=type==='CH4'?4:2;for(let i=0;i<bonds;i++){const a=ang+i*(6.28/bonds),x=cx+Math.cos(a)*70,y=cy+Math.sin(a)*40;moctx.strokeStyle='#7b8fa8';moctx.beginPath();moctx.moveTo(cx,cy);moctx.lineTo(x,y);moctx.stroke();moctx.fillStyle='#0071e3';moctx.beginPath();moctx.arc(x,y,8,0,6.3);moctx.fill();}requestAnimationFrame(molecule)}
+
+const o=$('#orrery'),octx=o.getContext('2d');let ot=0;function orrery(){fit(o,octx);const w=o.clientWidth,h=o.clientHeight,cx=w/2,cy=h/2,ts=+$('#timeScale').value;$('#tv').textContent=ts+'x';octx.strokeStyle='#d5dfec';octx.beginPath();octx.arc(cx,cy,50,0,6.3);octx.arc(cx,cy,85,0,6.3);octx.stroke();octx.fillStyle='#f5b301';octx.beginPath();octx.arc(cx,cy,10,0,6.3);octx.fill();const ex=cx+Math.cos(ot)*50,ey=cy+Math.sin(ot)*50,mx=cx+Math.cos(ot*.53)*85,my=cy+Math.sin(ot*.53)*85;octx.fillStyle='#2f7be5';octx.beginPath();octx.arc(ex,ey,6,0,6.3);octx.fill();octx.fillStyle='#d24f39';octx.beginPath();octx.arc(mx,my,5,0,6.3);octx.fill();ot+=0.002*ts;requestAnimationFrame(orrery)}
+
+const ph=$('#phase'),phctx=ph.getContext('2d');function phase(){fit(ph,phctx);const t=+$('#phaseSlider').value/100;$('#pv').textContent=Math.round(t*100)+'%';const w=ph.clientWidth,h=ph.clientHeight,cx=w/2,cy=h/2,r=70;phctx.fillStyle='#111';phctx.beginPath();phctx.arc(cx,cy,r,0,6.3);phctx.fill();phctx.fillStyle='#fff';phctx.beginPath();phctx.ellipse(cx+(t-.5)*r*1.8,cy,Math.abs(.5-t)*r*2,r,0,0,6.3);phctx.fill();$('#phaseOut').textContent=t<.03||t>.97?'삭/망 근처':t<.5?'초승~상현':'하현~그믐';requestAnimationFrame(phase)}
+
+$('#solve').onclick=()=>{const q=$('#solver').value.replace(/\s+/g,'');if(!q)return $('#solveOut').textContent='입력값 없음';if(q.includes('=')&&q.includes('x')){const[l,r]=q.split('='),m=l.match(/^([+-]?\d*\.?\d*)x([+-]\d+\.?\d*)?$/);if(!m)return $('#solveOut').textContent='형식: ax+b=c';const a=m[1]===''||m[1]==='+'?1:m[1]==='-'?-1:+m[1],b=m[2]?+m[2]:0;return $('#solveOut').textContent='x = '+((+r-b)/a)}if(!/^[0-9+\-*/().]+$/.test(q))return $('#solveOut').textContent='허용되지 않은 식';try{$('#solveOut').textContent='결과: '+Function(`"use strict";return (${q})`)()}catch{$('#solveOut').textContent='계산 실패'}};
+function convert(dir){const v=+$('#cv').value,t=$('#ct').value;let o=0,u='';if(t==='ev-j'){const k=1.602176634e-19;o=dir?v*k:v/k;u=dir?'J':'eV'}if(t==='ly-pc'){const k=3.26156;o=dir?v/k:v*k;u=dir?'pc':'ly'}if(t==='atm-pa'){const k=101325;o=dir?v*k:v/k;u=dir?'Pa':'atm'}$('#convOut').textContent=`결과: ${o.toExponential(6)} ${u}`}
+$('#c1').onclick=()=>convert(true);$('#c2').onclick=()=>convert(false);
+
+graph();trig();motion();energy();wave();molecule();orrery();phase();
+</script>
+</body>
+</html>
